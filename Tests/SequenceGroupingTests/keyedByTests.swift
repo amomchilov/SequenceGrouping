@@ -23,4 +23,17 @@ final class KeyedByTests: XCTestCase {
 		https://github.com/apple/swift/blob/4d1d8a9de5ebc132a17aee9fc267461facf89bf8/validation-test/stdlib/Dictionary.swift#L1914
 		""")
 	}
+	
+	func testNonUniqueKeysWithMergeFunction() {
+		let d = ["Apple", "Avocado", "Banana", "Cherry", "Coconut"].keyed(
+			by: { $0.first! },
+			uniquingKeysWith: { older, newer in "\(older)-\(newer)"}
+		)
+
+		XCTAssertEqual(d.count, 3)
+		XCTAssertEqual(d["A"]!, "Apple-Avocado")
+		XCTAssertEqual(d["B"]!, "Banana")
+		XCTAssertEqual(d["C"]!, "Cherry-Coconut")
+		XCTAssertNil(d["D"])
+	}
 }
