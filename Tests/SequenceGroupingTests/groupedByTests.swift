@@ -2,6 +2,8 @@ import XCTest
 import SequenceGrouping
 
 final class GroupedByTests: XCTestCase {
+	private class SampleError: Error {}
+
 	// Based on https://github.com/apple/swift/blob/4d1d8a9de5ebc132a17aee9fc267461facf89bf8/validation-test/stdlib/Dictionary.swift#L1974-L1988
 	
 	func testGroupedBy() {
@@ -18,5 +20,16 @@ final class GroupedByTests: XCTestCase {
 
 		let d3 = (0..<0).grouped(by: { $0 })
 		XCTAssertEqual(0, d3.count)
+	}
+
+	func testThrowingFromKeyFunction() {
+		let input = ["Apple", "Banana", "Cherry"]
+		let error = SampleError()
+
+		XCTAssertThrowsError(
+			try input.grouped(by: { (_: String) -> Character in throw error })
+		) { thrownError in
+			XCTAssertIdentical(error, thrownError as? SampleError)
+		}
 	}
 }

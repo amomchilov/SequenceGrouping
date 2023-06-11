@@ -1,13 +1,13 @@
 extension Sequence {
 	public func keyed<Key>(
-		by keyForValue: (Element) -> Key,
-		uniquingKeysWith combine: ((Element, Element) -> Element)? = nil
-	) -> [Key: Element] {
-		withoutActuallyEscaping(keyForValue) { keyForValue in
+		by keyForValue: (Element) throws -> Key,
+		uniquingKeysWith combine: ((Element, Element) throws -> Element)? = nil
+	) rethrows -> [Key: Element] {
+		try withoutActuallyEscaping(keyForValue) { keyForValue in
 			if let combine {
-				return Dictionary(self.lazy.map { (keyForValue($0), $0) }, uniquingKeysWith: combine)
+				return try Dictionary(self.lazy.map { (try keyForValue($0), $0) }, uniquingKeysWith: combine)
 			} else {
-				return Dictionary(uniqueKeysWithValues: self.lazy.map { (keyForValue($0), $0) } )
+				return try Dictionary(uniqueKeysWithValues: self.lazy.map { (try keyForValue($0), $0) } )
 			}
 		}
 	}

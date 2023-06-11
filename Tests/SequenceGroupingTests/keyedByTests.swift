@@ -2,6 +2,8 @@ import XCTest
 import SequenceGrouping
 
 final class KeyedByTests: XCTestCase {
+	private class SampleError: Error {}
+
 	func testUniqueKeys() {
 		let d = ["Apple", "Banana", "Cherry"].keyed(by: { $0.first! })
 		XCTAssertEqual(d.count, 3)
@@ -35,5 +37,27 @@ final class KeyedByTests: XCTestCase {
 		XCTAssertEqual(d["B"]!, "Banana")
 		XCTAssertEqual(d["C"]!, "Cherry-Coconut")
 		XCTAssertNil(d["D"])
+	}
+
+	func testThrowingFromKeyFunction() {
+		let input = ["Apple", "Banana", "Cherry"]
+		let error = SampleError()
+
+		XCTAssertThrowsError(
+			try input.keyed(by: { (_: String) -> Character in throw error })
+		) { thrownError in
+			XCTAssertIdentical(error, thrownError as? SampleError)
+		}
+	}
+
+	func testThrowingFromCombineFunction() {
+		let input = ["Apple", "Avocado", "Banana", "Cherry"]
+		let error = SampleError()
+
+		XCTAssertThrowsError(
+			try input.keyed(by: { $0.first! }, uniquingKeysWith: { _, _ in throw error })
+		) { thrownError in
+			XCTAssertIdentical(error, thrownError as? SampleError)
+		}
 	}
 }
