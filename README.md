@@ -5,4 +5,6 @@ A sample implementation of `grouped(by:)` and `keyed(by:)`. See the tests for de
 * Pitch: https://forums.swift.org/t/pitch-sequence-grouped-by-and-keyed-by/65511
 * Proposal: https://github.com/apple/swift-evolution/pull/2078
 
-I'm not sure yet whether this will eventually be targetted at [`swift-algorithms`](https://github.com/apple/swift-algorithms) or [`swift-standard-library-preview`](https://github.com/apple/swift-standard-library-preview).
+Don't import this package. It's going to soon be deleted.
+
+This code is being up-streamed into `swift-algorithms` in [this PR](https://github.com/apple/swift-algorithms/pull/197)
